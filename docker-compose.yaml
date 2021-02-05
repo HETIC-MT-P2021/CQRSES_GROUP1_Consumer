@@ -13,4 +13,4 @@ services:
     ports:
       - "${API_PORT}:${DOCKER_API_PORT}"
     command: go run main.go
-    network_mode: host # decomment on localhost
+    # network_mode: host # decomment on localhost

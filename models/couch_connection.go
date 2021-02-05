@@ -6,8 +6,8 @@ import (
 	"github.com/couchbase/gocb"
 )
 
-var eventBucket *gocb.Bucket
-var readBucket *gocb.Bucket
+var EventBucket *gocb.Bucket
+var ReadBucket *gocb.Bucket
 
 func ConnectToCouchBase(host, user, password string) {
 	fmt.Println(host)
@@ -55,6 +55,6 @@ func ConnectToCouchBase(host, user, password string) {
 
 	fmt.Println("CouchBase successfully connected!")
 
-	eventBucket = tempEventBucket
-	readBucket = tempReadBucket
+	EventBucket = tempEventBucket
+	ReadBucket = tempReadBucket
 }
