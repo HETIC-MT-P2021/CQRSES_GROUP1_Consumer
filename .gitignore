@@ -5,6 +5,7 @@
 *.so
 *.dylib
 
+
 # Test binary, built with `go test -c`
 *.test
 
@@ -13,3 +14,13 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+.env
+
+tmp
+
+# To push the folder with correct permissions but skip it's content
+couchdb-data/*
+!couchdb-data/.gitkeep
+
+.idea
+.DS_Store
