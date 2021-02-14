@@ -15,6 +15,16 @@ type Document struct {
 	Store []Event
 }
 
+func AddEventToDocument(document Document, event Event) Document {
+	if len(document.Store) == 0 {
+		document.Store = []Event{event}
+	} else {
+		document.Store = append(document.Store, event)
+	}
+
+	return document
+}
+
 func UpsertDocument(id string, document Document) (gocb.Cas, error) {
 	cas, err := EventBucket.Upsert(id, document, 0)
 

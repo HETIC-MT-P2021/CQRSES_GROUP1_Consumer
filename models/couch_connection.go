@@ -11,8 +11,6 @@ var ReadBucket *gocb.Bucket
 
 func ConnectToCouchBase(host, user, password string) {
 	fmt.Println(host)
-	// fmt.Println("Waiting for couchBase")
-	// time.Sleep(12 * time.Second)
 	fmt.Println("Connecting to CouchBase")
 
 	cluster, couchConErr := gocb.Connect(fmt.Sprintf("couchbase://%s", host))
