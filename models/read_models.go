@@ -9,21 +9,25 @@ import (
 )
 
 func updateModel(post Post, event Event) Post {
-	copier.Copy(post, event.Payload)
+	err := copier.Copy(post, event.Payload)
 
-	return post
+	return post, err
 }
 
-func BuildPostReadModel(id string, document Document) Post {
+func BuildPostReadModel(id string, document Document) (Post, err) {
 	var readmodel Post
 
 	for _, event := range document.Store {
 		if event.EventType == consts.POST_CREATED_EVENT_TYPE || event.EventType == consts.POST_UPDATED_EVENT_TYPE {
-			readmodel = updateModel(readmodel, event)
+			readmodel, err = updateModel(readmodel, event)
+
+			if err != nil {
+				return readmodel, err
+			}
 		}
 	}
 
-	return readmodel
+	return readmodel, nil
 }
 
 func UpsertReadModel(id string, model interface{}) (gocb.Cas, error) {

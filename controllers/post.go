@@ -9,7 +9,7 @@ import (
 func AddPostEvent(id string, event models.Event) {
 	document, _, getError := models.GetDocument(id)
 
-	if getError != nil {
+	if getError != nil && fmt.Sprintf("%e", getError) != "key not found" {
 		fmt.Println(getError)
 		return
 	}
@@ -24,9 +24,15 @@ func AddPostEvent(id string, event models.Event) {
 	}
 
 	fmt.Println("Post successfuly stored !")
-	/*
-		readModel := models.BuildPostReadModel(id, document)
 
-		models.UpsertReadModel(id, readModel)
-	*/
+	readModel, err := models.BuildPostReadModel(id, document)
+
+	if err != nil {
+		// remove event from document
+		return
+	}
+
+	models.UpsertReadModel(id, readModel)
+
+	fmt.Println("Read models successfully updated")
 }
