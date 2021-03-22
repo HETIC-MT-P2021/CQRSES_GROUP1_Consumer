@@ -9,7 +9,7 @@ import (
 func AddPostEvent(id string, event models.Event) {
 	eventStore, _, getError := models.GetEventStore(id)
 
-	if getError != nil && fmt.Sprintf("%e", getError) != "key not found" {
+	if getError != nil && fmt.Sprintf("%s", getError) != "key not found" {
 		fmt.Println(getError)
 		return
 	}
@@ -28,6 +28,7 @@ func AddPostEvent(id string, event models.Event) {
 	readModel, err := models.BuildPostReadModel(id, eventStore)
 	fmt.Println(readModel)
 	if err != nil {
+		fmt.Println(err)
 		// remove event from eventStore
 		return
 	}

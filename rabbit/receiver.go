@@ -42,7 +42,7 @@ func Receive() {
 				Payload:   post,
 			}
 
-			controllers.AddPostEvent(fmt.Sprintf("%d", post.ID), createPostEvent)
+			controllers.AddPostEvent(fmt.Sprintf("%s", post.ID), createPostEvent)
 		}
 	}()
 

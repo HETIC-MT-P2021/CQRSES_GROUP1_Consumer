@@ -8,7 +8,7 @@ import (
 
 type Event struct {
 	EventType string
-	Payload   interface{}
+	Payload   Post
 }
 
 type EventStore struct {
@@ -38,7 +38,7 @@ func UpsertDocument(id string, eventStore EventStore) (gocb.Cas, error) {
 	return cas, nil
 }
 
-func GetDocument(id string) (EventStore, gocb.Cas, error) {
+func GetEventStore(id string) (EventStore, gocb.Cas, error) {
 	var eventStore EventStore
 
 	cas, err := EventBucket.Get(id, &eventStore)
