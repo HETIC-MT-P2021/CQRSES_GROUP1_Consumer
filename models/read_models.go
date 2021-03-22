@@ -8,18 +8,18 @@ import (
 	"github.com/jinzhu/copier"
 )
 
-func updateModel(post Post, event Event) Post {
+func updateModel(post Post, event Event) (Post, error) {
 	err := copier.Copy(post, event.Payload)
 
 	return post, err
 }
 
-func BuildPostReadModel(id string, document Document) (Post, err) {
+func BuildPostReadModel(id string, eventStore EventStore) (Post, error) {
 	var readmodel Post
 
-	for _, event := range document.Store {
+	for _, event := range eventStore.Store {
 		if event.EventType == consts.POST_CREATED_EVENT_TYPE || event.EventType == consts.POST_UPDATED_EVENT_TYPE {
-			readmodel, err = updateModel(readmodel, event)
+			readmodel, err := updateModel(readmodel, event)
 
 			if err != nil {
 				return readmodel, err

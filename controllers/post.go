@@ -7,16 +7,16 @@ import (
 )
 
 func AddPostEvent(id string, event models.Event) {
-	document, _, getError := models.GetDocument(id)
+	eventStore, _, getError := models.GetEventStore(id)
 
 	if getError != nil && fmt.Sprintf("%e", getError) != "key not found" {
 		fmt.Println(getError)
 		return
 	}
 
-	document = models.AddEventToDocument(document, event)
+	eventStore = models.AddEventToDocument(eventStore, event)
 
-	_, upsertError := models.UpsertDocument(id, document)
+	_, upsertError := models.UpsertDocument(id, eventStore)
 
 	if upsertError != nil {
 		fmt.Println(upsertError)
@@ -25,10 +25,10 @@ func AddPostEvent(id string, event models.Event) {
 
 	fmt.Println("Post successfuly stored !")
 
-	readModel, err := models.BuildPostReadModel(id, document)
-
+	readModel, err := models.BuildPostReadModel(id, eventStore)
+	fmt.Println(readModel)
 	if err != nil {
-		// remove event from document
+		// remove event from eventStore
 		return
 	}
 

@@ -46,11 +46,6 @@ func ConnectToCouchBase(host, user, password string) {
 		panic(readConErr)
 	}
 
-	if readConErr != nil {
-		fmt.Println("Couch Event bucket error")
-		panic(readConErr)
-	}
-
 	fmt.Println("CouchBase successfully connected!")
 
 	EventBucket = tempEventBucket
