@@ -11,7 +11,7 @@ import (
 )
 
 // Receive gets consume message from a queue
-func Receive() {
+func ReceiveCreatePost() {
 	msgs, err := CommandChannel.Consume(
 		CreatePostQueue.Name, // queue
 		"",                   // consumer
@@ -23,12 +23,9 @@ func Receive() {
 	)
 	failOnError(err, "Failed to register a consumer")
 
-	forever := make(chan bool)
-
 	go func() {
 		for d := range msgs {
 			post := models.Post{}
-			log.Printf("Received a message: %s", d.Body)
 
 			err = json.Unmarshal(d.Body, &post)
 
@@ -42,10 +39,45 @@ func Receive() {
 				Payload:   post,
 			}
 
-			controllers.AddPostEvent(fmt.Sprintf("%s", post.ID), createPostEvent)
+			controllers.AddPostEvent(fmt.Sprintf("%d", post.ID), createPostEvent)
 		}
 	}()
 
-	log.Printf(" [*] Waiting for messages. To exit press CTRL+C")
-	<-forever
+	log.Printf("Create Queue Waiting for messages. To exit press CTRL+C")
+}
+
+// Receive gets consume message from a queue
+func ReceiveUpdatePost() {
+	msgs, err := CommandChannel.Consume(
+		UpdatePostQueue.Name, // queue
+		"",                   // consumer
+		true,                 // auto-ack
+		false,                // exclusive
+		false,                // no-local
+		false,                // no-wait
+		nil,                  // args
+	)
+	failOnError(err, "Failed to register a consumer")
+
+	go func() {
+		for d := range msgs {
+			post := models.Post{}
+
+			err = json.Unmarshal(d.Body, &post)
+
+			if err != nil {
+				log.Println("Couldn't get post from body")
+				log.Println(err)
+			}
+
+			updatePostEvent := models.Event{
+				EventType: consts.POST_UPDATED_EVENT_TYPE,
+				Payload:   post,
+			}
+
+			controllers.AddPostEvent(fmt.Sprintf("%d", post.ID), updatePostEvent)
+		}
+	}()
+
+	log.Printf("Update Queue Waiting for messages. To exit press CTRL+C")
 }
