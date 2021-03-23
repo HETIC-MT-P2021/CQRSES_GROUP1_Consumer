@@ -15,7 +15,12 @@ func Initialize(env map[string]string) {
 		env["RABBIT_USER"],
 		env["RABBIT_PASSWORD"])
 
-	rabbit.Receive()
+	forever := make(chan bool)
+
+	rabbit.ReceiveCreatePost()
+	rabbit.ReceiveUpdatePost()
+
+	<-forever
 }
 
 func main() {

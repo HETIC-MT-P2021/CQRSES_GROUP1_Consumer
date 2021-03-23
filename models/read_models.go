@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP1_Consumer/consts"
@@ -19,6 +20,9 @@ func BuildPostReadModel(id string, eventStore EventStore) (Post, error) {
 
 	for _, event := range eventStore.Store {
 		if event.EventType == consts.POST_CREATED_EVENT_TYPE || event.EventType == consts.POST_UPDATED_EVENT_TYPE {
+			if readmodel.ID != 0 && event.EventType == consts.POST_CREATED_EVENT_TYPE {
+				return readmodel, errors.New("There cannot be two createPost Event")
+			}
 			readmodel, err := updateModel(&readmodel, event.Payload)
 
 			if err != nil {

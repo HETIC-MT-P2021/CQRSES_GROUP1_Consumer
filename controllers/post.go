@@ -16,24 +16,30 @@ func AddPostEvent(id string, event models.Event) {
 
 	eventStore = models.AddEventToDocument(eventStore, event)
 
+	readModel, err := models.BuildPostReadModel(id, eventStore)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
 	_, upsertError := models.UpsertDocument(id, eventStore)
 
 	if upsertError != nil {
+		fmt.Println("Error, Couldn't insert event store:")
 		fmt.Println(upsertError)
 		return
 	}
 
 	fmt.Println("Post successfuly stored !")
 
-	readModel, err := models.BuildPostReadModel(id, eventStore)
-	fmt.Println(readModel)
-	if err != nil {
-		fmt.Println(err)
-		// remove event from eventStore
+	_, upsertError = models.UpsertReadModel(id, readModel)
+
+	if upsertError != nil {
+		fmt.Println("Error, Couldn't insert read model:")
+		fmt.Println(upsertError)
 		return
 	}
-
-	models.UpsertReadModel(id, readModel)
 
 	fmt.Println("Read models successfully updated")
 }
