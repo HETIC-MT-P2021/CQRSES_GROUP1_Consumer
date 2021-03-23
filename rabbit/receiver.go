@@ -13,13 +13,13 @@ import (
 // ReceiveCreatePost gets consume message from a queue
 func ReceiveCreatePost() {
 	msgs, err := CommandChannel.Consume(
-		CreatePostQueue.Name, // queue
-		"",                   // consumer
-		true,                 // auto-ack
-		false,                // exclusive
-		false,                // no-local
-		false,                // no-wait
-		nil,                  // args
+		consts.CREATE_POST_COMMAND_QUEUE, // queue
+		"",                               // consumer
+		true,                             // auto-ack
+		false,                            // exclusive
+		false,                            // no-local
+		false,                            // no-wait
+		nil,                              // args
 	)
 	failOnError(err, "Failed to register a consumer")
 
@@ -49,13 +49,13 @@ func ReceiveCreatePost() {
 // ReceiveUpdatePost gets consume message from a queue
 func ReceiveUpdatePost() {
 	msgs, err := CommandChannel.Consume(
-		UpdatePostQueue.Name, // queue
-		"",                   // consumer
-		true,                 // auto-ack
-		false,                // exclusive
-		false,                // no-local
-		false,                // no-wait
-		nil,                  // args
+		consts.UPDATE_POST_COMMAND_QUEUE, // queue
+		"",                               // consumer
+		true,                             // auto-ack
+		false,                            // exclusive
+		false,                            // no-local
+		false,                            // no-wait
+		nil,                              // args
 	)
 	failOnError(err, "Failed to register a consumer")
 
@@ -85,13 +85,13 @@ func ReceiveUpdatePost() {
 // ReceiveDeletePost gets consume message from a queue
 func ReceiveDeletePost() {
 	msgs, err := CommandChannel.Consume(
-		DeletePostQueue.Name, // queue
-		"",                   // consumer
-		true,                 // auto-ack
-		false,                // exclusive
-		false,                // no-local
-		false,                // no-wait
-		nil,                  // args
+		consts.DELETE_POST_COMMAND_QUEUE, // queue
+		"",                               // consumer
+		true,                             // auto-ack
+		false,                            // exclusive
+		false,                            // no-local
+		false,                            // no-wait
+		nil,                              // args
 	)
 	failOnError(err, "Failed to register a consumer")
 
