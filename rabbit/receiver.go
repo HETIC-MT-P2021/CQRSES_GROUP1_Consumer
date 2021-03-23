@@ -10,7 +10,7 @@ import (
 	"github.com/HETIC-MT-P2021/CQRSES_GROUP1_Consumer/models"
 )
 
-// Receive gets consume message from a queue
+// ReceiveCreatePost gets consume message from a queue
 func ReceiveCreatePost() {
 	msgs, err := CommandChannel.Consume(
 		CreatePostQueue.Name, // queue
@@ -46,7 +46,7 @@ func ReceiveCreatePost() {
 	log.Printf("Create Queue Waiting for messages. To exit press CTRL+C")
 }
 
-// Receive gets consume message from a queue
+// ReceiveUpdatePost gets consume message from a queue
 func ReceiveUpdatePost() {
 	msgs, err := CommandChannel.Consume(
 		UpdatePostQueue.Name, // queue
@@ -80,4 +80,40 @@ func ReceiveUpdatePost() {
 	}()
 
 	log.Printf("Update Queue Waiting for messages. To exit press CTRL+C")
+}
+
+// ReceiveDeletePost gets consume message from a queue
+func ReceiveDeletePost() {
+	msgs, err := CommandChannel.Consume(
+		DeletePostQueue.Name, // queue
+		"",                   // consumer
+		true,                 // auto-ack
+		false,                // exclusive
+		false,                // no-local
+		false,                // no-wait
+		nil,                  // args
+	)
+	failOnError(err, "Failed to register a consumer")
+
+	go func() {
+		for d := range msgs {
+			post := models.Post{}
+
+			err = json.Unmarshal(d.Body, &post)
+
+			if err != nil {
+				log.Println("Couldn't get post from body")
+				log.Println(err)
+			}
+
+			updatePostEvent := models.Event{
+				EventType: consts.POST_DELETED_EVENT_TYPE,
+				Payload:   post,
+			}
+
+			controllers.AddPostEvent(fmt.Sprintf("%d", post.ID), updatePostEvent)
+		}
+	}()
+
+	log.Printf("Delete Queue Waiting for messages. To exit press CTRL+C")
 }
