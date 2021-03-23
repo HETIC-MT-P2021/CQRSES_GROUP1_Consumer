@@ -6,13 +6,11 @@ import (
 	"github.com/couchbase/gocb"
 )
 
-var eventBucket *gocb.Bucket
-var readBucket *gocb.Bucket
+var EventBucket *gocb.Bucket
+var ReadBucket *gocb.Bucket
 
 func ConnectToCouchBase(host, user, password string) {
 	fmt.Println(host)
-	// fmt.Println("Waiting for couchBase")
-	// time.Sleep(12 * time.Second)
 	fmt.Println("Connecting to CouchBase")
 
 	cluster, couchConErr := gocb.Connect(fmt.Sprintf("couchbase://%s", host))
@@ -48,13 +46,8 @@ func ConnectToCouchBase(host, user, password string) {
 		panic(readConErr)
 	}
 
-	if readConErr != nil {
-		fmt.Println("Couch Event bucket error")
-		panic(readConErr)
-	}
-
 	fmt.Println("CouchBase successfully connected!")
 
-	eventBucket = tempEventBucket
-	readBucket = tempReadBucket
+	EventBucket = tempEventBucket
+	ReadBucket = tempReadBucket
 }
