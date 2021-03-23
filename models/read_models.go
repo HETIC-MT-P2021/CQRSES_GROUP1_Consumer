@@ -19,7 +19,7 @@ func BuildPostReadModel(id string, eventStore EventStore) (Post, error) {
 	var readmodel Post
 
 	for _, event := range eventStore.Store {
-		if event.EventType == consts.POST_CREATED_EVENT_TYPE || event.EventType == consts.POST_UPDATED_EVENT_TYPE {
+		if event.EventType != consts.POST_DELETED_EVENT_TYPE {
 			if readmodel.ID != 0 && event.EventType == consts.POST_CREATED_EVENT_TYPE {
 				return readmodel, errors.New("There cannot be two createPost Event")
 			}
@@ -28,6 +28,8 @@ func BuildPostReadModel(id string, eventStore EventStore) (Post, error) {
 			if err != nil {
 				return *readmodel, err
 			}
+		} else {
+			return readmodel, nil
 		}
 	}
 
@@ -45,4 +47,21 @@ func UpsertReadModel(id string, model interface{}) (gocb.Cas, error) {
 	}
 
 	return cas, nil
+}
+
+func GetReadModel(id string) (Post, gocb.Cas, error) {
+	var post Post
+	cas, error := ReadBucket.Get(id, &post)
+
+	return post, cas, error
+}
+
+func DeleteReadModel(id string) (gocb.Cas, error) {
+	_, actualCas, getErr := GetReadModel(id)
+
+	if getErr != nil {
+		return actualCas, nil
+	}
+
+	return ReadBucket.Remove(id, actualCas)
 }

@@ -19,6 +19,7 @@ func Initialize(env map[string]string) {
 
 	rabbit.ReceiveCreatePost()
 	rabbit.ReceiveUpdatePost()
+	rabbit.ReceiveDeletePost()
 
 	<-forever
 }

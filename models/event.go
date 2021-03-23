@@ -3,6 +3,7 @@ package models
 import (
 	"fmt"
 
+	"github.com/HETIC-MT-P2021/CQRSES_GROUP1_Consumer/consts"
 	"github.com/couchbase/gocb"
 )
 
@@ -15,17 +16,22 @@ type EventStore struct {
 	Store []Event
 }
 
-func AddEventToDocument(eventStore EventStore, event Event) EventStore {
-	if len(eventStore.Store) == 0 {
+func AddEventToEventStore(eventStore EventStore, event Event) (EventStore, bool) {
+	didUpdate := false
+
+	if len(eventStore.Store) == 0 && event.EventType == consts.POST_CREATED_EVENT_TYPE {
 		eventStore.Store = []Event{event}
-	} else {
+		didUpdate = true
+	} else if len(eventStore.Store) > 0 && eventStore.Store[len(eventStore.Store)-1].EventType != consts.POST_DELETED_EVENT_TYPE && event.EventType != consts.POST_CREATED_EVENT_TYPE {
+		// No update for deleted posts and creation only for create event
 		eventStore.Store = append(eventStore.Store, event)
+		didUpdate = true
 	}
 
-	return eventStore
+	return eventStore, didUpdate
 }
 
-func UpsertDocument(id string, eventStore EventStore) (gocb.Cas, error) {
+func UpsertEventStore(id string, eventStore EventStore) (gocb.Cas, error) {
 	cas, err := EventBucket.Upsert(id, eventStore, 0)
 
 	if err != nil {
