@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  consumer:
+    build:
+      context: .
+      dockerfile: ./Docker/Dockerfile
+    environment:
+      GIN_MODE: "release"
+    volumes:
+      - .:/app
+    working_dir: /app
+    ports:
+      - "${API_PORT}:${DOCKER_API_PORT}"
+    command: go run main.go
+    # network_mode: host # decomment on localhost

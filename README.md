@@ -1,5 +1,8 @@
 # CQRSES_GROUP1_Consumer
 
+
+The goal of this project is to process commands from the [main app](https://github.com/HETIC-MT-P2021/CQRSES_GROUP1).
+We used Golang, A RabbitMQ and a CouchBase Database
 This repository hosts the consumer application.
 The goal of this project is to process commands from the [main app](https://github.com/HETIC-MT-P2021/CQRSES_GROUP1).
 We used Golang, RabbitMQ and a CouchBase Database
@@ -19,12 +22,18 @@ docker-compose up --build
 
 Your consumer is ready to go !
 
-## Contributing 💡
-Share with us your ideas to improve our project !
 
-See [contributing](https://github.com/HETIC-MT-P2021/CQRSES_GROUP1/blob/main/CONTRIBUTING.MD) guidelines.
+
+- Go version: `1.15`
+
+## Contributing
+
+See [CONTRIBUTING.MD](https://github.com/HETIC-MT-P2021/CQRSES_GROUP1/blob/main/CONTRIBUTING.MD)
+
+
 
 ### Authors 🏄 
+
 
 - [Tsabot](https://github.com/Tsabot)
 - [myouuu](https://github.com/myouuu)
